@@ -5,6 +5,17 @@ Add / configure rspec
 Set up rough file structure
 Check that spec file can read from code file and provide expected results
 
+## Step 2
+Consider the overall project structure
+- A conductor to provide overall direction
+- A file ingestor
+- The Robot itself
+
+Create the necessary files, and make the minimum test required to check the plumbing is connnected
+
+## Step 3
+Write test file and code for the Ingestor. Requirement is to be able to read a text file from the current directory, parse it for the instruction words provided in the readme, and output a list of `instructions` ready for the input to the Robot class
+
 
 
 
