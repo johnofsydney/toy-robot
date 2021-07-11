@@ -48,6 +48,10 @@ Revisit the Conductor, mainly to cater for the fact that now we instantiate a ro
 ## Step 6
 Refactor, look at test contexts without tests, add running instructions
 
+## Final thoughts
+- there is too much testing of private methods. In practice it is usually better to test the public methods with a more exhaustive set of input. Sometimes though it is better to test a private method, than to expose it to make testing easier.
+- This solution could be easily expanded to allow multiple robots, by adjusting the Conductor to read in all the files from a directory rather than one particular file.
+
 
 
 # Toy Robot

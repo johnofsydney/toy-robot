@@ -9,14 +9,14 @@ describe Conductor do
     allow(Robot).to receive(:new).and_return(mock_robot)
   end
 
-  let(:mock_ingestor) { instance_double('Ingestor', :instructions => stub_list) }
-  let(:mock_robot) { instance_double('Robot', :report => stub_report) }
+  let(:mock_ingestor) { instance_double('Ingestor', instructions: stub_list) }
+  let(:mock_robot) { instance_double('Robot', report: nil) }
 
   let(:stub_list) do
     ['PLACE 0,0,NORTH', 'MOVE', 'REPORT']
   end
 
-  let(:stub_report) { [1,1] }
+  let(:stub_report) { [1, 1] }
 
   describe '.start' do
     subject(:start) { described_class.start }

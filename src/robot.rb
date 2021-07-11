@@ -1,7 +1,7 @@
 # frozen_string_literal: true
-require 'pry'
-class Robot
 
+# definition of class Robot for coding test.
+class Robot
   attr_accessor :x, :y, :direction
 
   def initialize(instructions)
@@ -13,10 +13,14 @@ class Robot
     commander
   end
 
+  def report
+    p "#{x},#{y},#{direction}"
+  end
 
+  private
 
-  def commander
-    while @instructions.length > 0
+  def commander # rubocop:disable Metrics/MethodLength
+    until @instructions.empty?
       instruction = @instructions.shift
       case instruction
       when /PLACE \d,\d,(NORTH)|(SOUTH)|(EAST)|(WEST)/
@@ -35,13 +39,13 @@ class Robot
 
   def place(instruction)
     coordinates = instruction.scan(/\d/).map(&:to_i)
-    return if coordinates.any?{ |n| n > 5 }
+    return if coordinates.any? { |n| n > 5 }
 
-    @x, @y  = coordinates
+    @x, @y = coordinates
     @direction = instruction.scan(/(NORTH|SOUTH|EAST|WEST)/).flatten.first
   end
 
-  def move
+  def move # rubocop:disable Metrics/CyclomaticComplexity
     case @direction
     when 'NORTH'
       @y += 1 unless @y > 4
@@ -66,9 +70,5 @@ class Robot
     @direction = DIRECTIONS[position]
   end
 
-  def report
-    p "#{x},#{y},#{direction}"
-  end
-
-  DIRECTIONS = %w[NORTH EAST SOUTH WEST]
+  DIRECTIONS = %w[NORTH EAST SOUTH WEST].freeze
 end

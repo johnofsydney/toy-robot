@@ -1,10 +1,9 @@
 # frozen_string_literal: true
-require 'pry'
+
 require_relative 'ingestor'
 require_relative 'robot'
 
-
-
+# Conductor class to coordinate the creation of robots
 class Conductor
   def self.start
     instructions = Ingestor.new('commands.txt').instructions
@@ -12,5 +11,4 @@ class Conductor
   end
 end
 
-result = Conductor.start
-p result
+Conductor.start

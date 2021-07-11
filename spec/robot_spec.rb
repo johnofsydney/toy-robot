@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'pry'
 require 'spec_helper'
 require_relative '../src/robot'
@@ -7,6 +8,73 @@ describe Robot do
   subject(:robot) { Robot.new(instructions) }
   let(:instructions) { [] }
 
+  describe '#commander' do
+    before do
+      # knowlingly testing a private method
+      robot.send(:commander)
+    end
+
+    context 'simple & legitimate list' do
+      let(:instructions) { ['PLACE 0,0,NORTH', 'MOVE', 'REPORT'] }
+
+      it { expect(robot.report).to eq('0,1,NORTH') }
+    end
+
+    context 'longer & legitimate list' do
+      let(:instructions) do
+        [
+          'PLACE 4,4,NORTH',
+          'MOVE',
+          'MOVE',
+          'RIGHT',
+          'MOVE',
+          'MOVE',
+          'REPORT'
+        ]
+      end
+
+      it { expect(robot.report).to eq('5,5,EAST') }
+    end
+
+    context 'longer & legitimate list with several place & report statement' do
+      let(:instructions) do
+        [
+          'PLACE 4,4,NORTH',
+          'MOVE',
+          'MOVE',
+          'RIGHT',
+          'MOVE',
+          'MOVE',
+          'REPORT',
+          'PLACE 0,0,SOUTH',
+          'MOVE',
+          'REPORT'
+        ]
+      end
+
+      it { expect(robot.report).to eq('0,0,SOUTH') }
+    end
+
+    context 'when there is a mix of legitimate and illegitimate commands' do
+      let(:instructions) do
+        [
+          'PLACE 4,4,NORTH',
+          'MOVE',
+          'MOVE',
+          'RIGHT',
+          'MOVE',
+          'MOVE',
+          'RETORT',
+          'PLACE 0,0,MOUTH',
+          'MOUSE',
+          'REPORT'
+        ]
+      end
+
+      it { expect(robot.report).to eq('5,5,EAST') }
+    end
+  end
+
   describe '#place' do
     let(:instruction) { "#{place} #{coordinates},#{direction}" }
     let(:place) { 'PLACE' }
@@ -14,7 +82,8 @@ describe Robot do
     let(:direction) { 'NORTH' }
 
     before do
-      robot.place(instruction)
+      # knowingly testing a private method
+      robot.send(:place, instruction)
     end
 
     it 'is placed correctly' do
@@ -53,14 +122,10 @@ describe Robot do
     context 'when the coordinates are off the board' do
       let(:coordinates) { '7,8' }
 
-      it 'returns nil' do
-        expect(robot.place(instruction)).to be nil
-      end
-
       it 'does not change the location of the robot' do
         robot.x = 1
         robot.y = 2
-        robot.place(instruction)
+        robot.send(:place, instruction)
 
         expect(robot.x).to be 1
         expect(robot.y).to be 2
@@ -77,7 +142,8 @@ describe Robot do
       robot.y = y
       robot.direction = direction
 
-      robot.move
+      # knowingly testing a private method
+      robot.send(:move)
     end
 
     context 'when facing north' do
@@ -166,95 +232,29 @@ describe Robot do
     context 'when facing north' do
       let(:direction) { 'NORTH' }
 
-      it { expect(robot.rotate('left')).to eq('WEST')}
-      it { expect(robot.rotate('right')).to eq('EAST')}
+      it { expect(robot.send(:rotate, 'left')).to eq('WEST') }
+      it { expect(robot.send(:rotate, 'right')).to eq('EAST') }
     end
 
     context 'when facing south' do
       let(:direction) { 'SOUTH' }
 
-      it { expect(robot.rotate('left')).to eq('EAST')}
-      it { expect(robot.rotate('right')).to eq('WEST')}
+      it { expect(robot.send(:rotate, 'left')).to eq('EAST') }
+      it { expect(robot.send(:rotate, 'right')).to eq('WEST') }
     end
 
     context 'when facing east' do
       let(:direction) { 'EAST' }
 
-      it { expect(robot.rotate('left')).to eq('NORTH')}
-      it { expect(robot.rotate('right')).to eq('SOUTH')}
+      it { expect(robot.send(:rotate, 'left')).to eq('NORTH') }
+      it { expect(robot.send(:rotate, 'right')).to eq('SOUTH') }
     end
 
     context 'when facing west' do
       let(:direction) { 'WEST' }
 
-      it { expect(robot.rotate('left')).to eq('SOUTH')}
-      it { expect(robot.rotate('right')).to eq('NORTH')}
-    end
-  end
-
-  describe '#commander' do
-    before do
-      robot.commander
-    end
-
-    context 'simple & legitimate list' do
-      let(:instructions) { ['PLACE 0,0,NORTH', 'MOVE', 'REPORT'] }
-
-      it { expect(robot.report).to eq('0,1,NORTH') }
-    end
-
-    context 'longer & legitimate list' do
-      let(:instructions) do
-        [
-          'PLACE 4,4,NORTH',
-          'MOVE',
-          'MOVE',
-          'RIGHT',
-          'MOVE',
-          'MOVE',
-          'REPORT'
-        ]
-      end
-
-      it { expect(robot.report).to eq('5,5,EAST') }
-    end
-
-    context 'longer & legitimate list with several place & report statement' do
-      let(:instructions) do
-        [
-          'PLACE 4,4,NORTH',
-          'MOVE',
-          'MOVE',
-          'RIGHT',
-          'MOVE',
-          'MOVE',
-          'REPORT',
-          'PLACE 0,0,SOUTH',
-          'MOVE',
-          'REPORT'
-        ]
-      end
-
-      it { expect(robot.report).to eq('0,0,SOUTH') }
-    end
-
-    context 'when there is a mix of legitimate and illegitimate commands' do
-      let(:instructions) do
-        [
-          'PLACE 4,4,NORTH',
-          'MOVE',
-          'MOVE',
-          'RIGHT',
-          'MOVE',
-          'MOVE',
-          'RETORT',
-          'PLACE 0,0,MOUTH',
-          'MOUSE',
-          'REPORT'
-        ]
-      end
-
-      it { expect(robot.report).to eq('5,5,EAST') }
+      it { expect(robot.send(:rotate, 'left')).to eq('SOUTH') }
+      it { expect(robot.send(:rotate, 'right')).to eq('NORTH') }
     end
   end
 end
