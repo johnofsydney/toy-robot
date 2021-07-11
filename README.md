@@ -19,6 +19,11 @@ Write test file and code for the Ingestor. Requirement is to be able to read a t
 ## Step 4
 Come back to the robot.
 After writing the ingestor, I feel the robot should be instantiated with the entire command sequence.
+This will allow the robot to be entirely self contained, and allows easier extention for many robots
+
+
+## Step 5
+Revisit the Conductor, mainly to cater for the fact that now we instantiate a robot with it's entire instruction list.
 
 
 

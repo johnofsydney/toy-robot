@@ -8,8 +8,7 @@ require_relative 'robot'
 class Conductor
   def self.start
     instructions = Ingestor.new('commands.txt').instructions
-    robot = Robot.new(1,1)
-    robot.report
+    Robot.new(instructions).report
   end
 end
 
