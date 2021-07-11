@@ -1,27 +1,74 @@
 # frozen_string_literal: true
-
+require 'pry'
 class Robot
 
-  attr_reader :x, :y
+  attr_accessor :x, :y, :direction
 
-  def initialize(x, y)
-    @x = x
-    @y = y
+  def initialize(instructions)
+    @x = nil
+    @y = nil
+    @direction = nil
+
+    @instructions = instructions
+    commander
+  end
+
+
+
+  def commander
+    while @instructions.length > 0
+      instruction = @instructions.pop
+      case instruction
+      when /PLACE/
+        place(instruction)
+      when 'MOVE'
+        move
+      when 'LEFT'
+        rotate('left')
+      when 'RIGHT'
+        rotate('right')
+      when 'REPORT'
+        report
+      end
+    end
+  end
+
+  def place(instruction)
+    coordinates = instruction.scan(/\d/).map(&:to_i)
+    return if coordinates.any?{ |n| n > 5 }
+
+    @x, @y  = coordinates
+    @direction = instruction.scan(/(NORTH|SOUTH|EAST|WEST)/).flatten.first
   end
 
   def move
-    true
+    case @direction
+    when 'NORTH'
+      @y += 1 unless @y > 4
+    when 'SOUTH'
+      @y -= 1 unless @y < 1
+    when 'EAST'
+      @x += 1 unless @x > 4
+    when 'WEST'
+      @x -= 1 unless @x < 1
+    end
   end
 
-  def left
-    true
-  end
+  def rotate(direction)
+    position = DIRECTIONS.index(@direction)
+    case direction
+    when 'left'
+      position = (position - 1) % 4
+    when 'right'
+      position = (position + 1) % 4
+    end
 
-  def right
-    true
+    @direction = DIRECTIONS[position]
   end
 
   def report
-    [x, y]
+    "#{x},#{y},#{direction}"
   end
+
+  DIRECTIONS = %w[NORTH EAST SOUTH WEST]
 end

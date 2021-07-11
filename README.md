@@ -16,6 +16,9 @@ Create the necessary files, and make the minimum test required to check the plum
 ## Step 3
 Write test file and code for the Ingestor. Requirement is to be able to read a text file from the current directory, parse it for the instruction words provided in the readme, and output a list of `instructions` ready for the input to the Robot class
 
+## Step 4
+Come back to the robot.
+After writing the ingestor, I feel the robot should be instantiated with the entire command sequence.
 
 
 

@@ -4,28 +4,197 @@ require 'spec_helper'
 require_relative '../src/robot'
 
 describe Robot do
-  subject(:robot) { Robot.new(x, y) }
-  let(:x)  { 1 }
-  let(:y)  { 1 }
+  subject(:robot) { Robot.new(instructions) }
+  let(:instructions) { [] }
+  # # let(:instructions) { [first_command, 'MOVE', 'REPORT'] }
+  # let(:first_command) { "#{place} #{coordinates},#{direction}" }
+  # let(:place) { 'PLACE' }
+  # let(:coordinates) { '0,0' }
+  # let(:direction) { 'NORTH' }
 
-  it 'is placed correctly' do
-    expect(robot.x).to eq(1)
-    expect(robot.y).to eq(1)
-  end
 
-  describe '#report' do
-    it{ expect(robot.report).to eq([1,1])}
+  describe '#place' do
+    let(:instruction) { "#{place} #{coordinates},#{direction}" }
+    let(:place) { 'PLACE' }
+    let(:coordinates) { '0,0' }
+    let(:direction) { 'NORTH' }
+
+    before do
+      robot.place(instruction)
+    end
+
+    it 'is placed correctly' do
+      expect(robot.x).to eq(0)
+      expect(robot.y).to eq(0)
+      expect(robot.direction).to eq(direction)
+    end
+
+    context 'with different coordinates' do
+      let(:coordinates) { '2,3' }
+
+      it 'is placed correctly' do
+        expect(robot.x).to eq(2)
+        expect(robot.y).to eq(3)
+      end
+    end
+
+    context 'when direction is SOUTH' do
+      let(:direction) { 'NORTH' }
+
+      it { expect(robot.direction).to eq(direction) }
+    end
+
+    context 'when direction is EAST' do
+      let(:direction) { 'NORTH' }
+
+      it { expect(robot.direction).to eq(direction) }
+    end
+
+    context 'when direction is WEST' do
+      let(:direction) { 'NORTH' }
+
+      it { expect(robot.direction).to eq(direction) }
+    end
+
+    context 'when the coordinates are off the board' do
+      let(:coordinates) { '7,8' }
+
+      it 'returns nil' do
+        expect(robot.place(instruction)).to be nil
+      end
+
+      it 'does not change the location of the robot' do
+        robot.x = 1
+        robot.y = 2
+        robot.place(instruction)
+
+        expect(robot.x).to be 1
+        expect(robot.y).to be 2
+      end
+    end
   end
 
   describe '#move' do
-    it{ expect(robot.move).to eq(true)}
+    let(:x) { 2 }
+    let(:y) { 2 }
+
+    before do
+      robot.x = x
+      robot.y = y
+      robot.direction = direction
+
+      robot.move
+    end
+
+    context 'when facing north' do
+      let(:direction) { 'NORTH' }
+
+      it 'should move one square north' do
+        expect(robot.x).to eq(x)
+        expect(robot.y).to eq(y + 1)
+      end
+
+      context 'when the robot is at the edge of the board' do
+        let(:y) { 5 }
+
+        it 'should not move' do
+          expect(robot.x).to eq(x)
+          expect(robot.y).to eq(y)
+        end
+      end
+    end
+
+    context 'when facing south' do
+      let(:direction) { 'SOUTH' }
+
+      it 'should move one square south' do
+        expect(robot.x).to eq(x)
+        expect(robot.y).to eq(y - 1)
+      end
+
+      context 'when the robot is at the edge of the board' do
+        let(:y) { 0 }
+
+        it 'should not move' do
+          expect(robot.x).to eq(x)
+          expect(robot.y).to eq(y)
+        end
+      end
+    end
+
+    context 'when facing east' do
+      let(:direction) { 'EAST' }
+
+      it 'should move one square east' do
+        expect(robot.x).to eq(x + 1)
+        expect(robot.y).to eq(y)
+      end
+
+      context 'when the robot is at the edge of the board' do
+        let(:x) { 5 }
+
+        it 'should not move' do
+          expect(robot.x).to eq(x)
+          expect(robot.y).to eq(y)
+        end
+      end
+    end
+
+    context 'when facing west' do
+      let(:direction) { 'WEST' }
+
+      it 'should move one square west' do
+        expect(robot.x).to eq(x - 1)
+        expect(robot.y).to eq(y)
+      end
+
+      context 'when the robot is at the edge of the board' do
+        let(:x) { 0 }
+
+        it 'should not move' do
+          expect(robot.x).to eq(x)
+          expect(robot.y).to eq(y)
+        end
+      end
+    end
   end
 
-  describe '#left' do
-    it{ expect(robot.left).to eq(true)}
-  end
+  describe '#rotate' do
+    let(:x) { 2 }
+    let(:y) { 2 }
 
-  describe '#right' do
-    it{ expect(robot.right).to eq(true)}
+    before do
+      robot.x = x
+      robot.y = y
+      robot.direction = direction
+    end
+
+    context 'when facing north' do
+      let(:direction) { 'NORTH' }
+
+      it { expect(robot.rotate('left')).to eq('WEST')}
+      it { expect(robot.rotate('right')).to eq('EAST')}
+    end
+
+    context 'when facing south' do
+      let(:direction) { 'SOUTH' }
+
+      it { expect(robot.rotate('left')).to eq('EAST')}
+      it { expect(robot.rotate('right')).to eq('WEST')}
+    end
+
+    context 'when facing east' do
+      let(:direction) { 'EAST' }
+
+      it { expect(robot.rotate('left')).to eq('NORTH')}
+      it { expect(robot.rotate('right')).to eq('SOUTH')}
+    end
+
+    context 'when facing west' do
+      let(:direction) { 'WEST' }
+
+      it { expect(robot.rotate('left')).to eq('SOUTH')}
+      it { expect(robot.rotate('right')).to eq('NORTH')}
+    end
   end
 end
