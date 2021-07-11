@@ -67,7 +67,7 @@ class Robot
   end
 
   def report
-    "#{x},#{y},#{direction}"
+    p "#{x},#{y},#{direction}"
   end
 
   DIRECTIONS = %w[NORTH EAST SOUTH WEST]

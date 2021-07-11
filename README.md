@@ -1,11 +1,32 @@
 # Toy Robot - John's Solution
 
-## Step 1
+
+## Running and testing the code
+This app uses ruby version 2.7.3 as specified in `.ruby-version`
+To install: clone the repo and
+- install the correct ruby version if required
+- `$ bundle install` to install necessary gems
+  - the specified bundler version is 2.1.4
+
+### to run the tests
+#### Unit Tests
+`$ bundle exec rspec`
+
+#### Integration Tests
+`$ ruby spec/integration/integration_test.rb`
+As per the instruction below, the robot will announce itself for ANY of the REPORT instructions in the list. The final call to `robot.report` will report it's finishing place.
+## to run the code
+- run `ruby src/conductor.rb` from within the root level of the folder
+- the app will pull comands from the file 'commands.txt' and output the final location
+- the final location report should be "0,0,SOUTH"
+- add or change commands to the file to have the robot make extra moves
+
+## Project Breakdown
+### Step 1
 Add / configure rspec
 Set up rough file structure
 Check that spec file can read from code file and provide expected results
-
-## Step 2
+### Step 2
 Consider the overall project structure
 - A conductor to provide overall direction
 - A file ingestor
@@ -13,17 +34,19 @@ Consider the overall project structure
 
 Create the necessary files, and make the minimum test required to check the plumbing is connnected
 
-## Step 3
+### Step 3
 Write test file and code for the Ingestor. Requirement is to be able to read a text file from the current directory, parse it for the instruction words provided in the readme, and output a list of `instructions` ready for the input to the Robot class
 
-## Step 4
+### Step 4
 Come back to the robot.
 After writing the ingestor, I feel the robot should be instantiated with the entire command sequence.
 This will allow the robot to be entirely self contained, and allows easier extention for many robots
 
-
-## Step 5
+### Step 5
 Revisit the Conductor, mainly to cater for the fact that now we instantiate a robot with it's entire instruction list.
+
+## Step 6
+Refactor, look at test contexts without tests, add running instructions
 
 
 
