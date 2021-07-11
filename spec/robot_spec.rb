@@ -1,17 +1,11 @@
 # frozen_string_literal: true
-
+require 'pry'
 require 'spec_helper'
 require_relative '../src/robot'
 
 describe Robot do
   subject(:robot) { Robot.new(instructions) }
   let(:instructions) { [] }
-  # # let(:instructions) { [first_command, 'MOVE', 'REPORT'] }
-  # let(:first_command) { "#{place} #{coordinates},#{direction}" }
-  # let(:place) { 'PLACE' }
-  # let(:coordinates) { '0,0' }
-  # let(:direction) { 'NORTH' }
-
 
   describe '#place' do
     let(:instruction) { "#{place} #{coordinates},#{direction}" }
@@ -195,6 +189,72 @@ describe Robot do
 
       it { expect(robot.rotate('left')).to eq('SOUTH')}
       it { expect(robot.rotate('right')).to eq('NORTH')}
+    end
+  end
+
+  describe '#commander' do
+    before do
+      robot.commander
+    end
+
+    context 'simple & legitimate list' do
+      let(:instructions) { ['PLACE 0,0,NORTH', 'MOVE', 'REPORT'] }
+
+      it { expect(robot.report).to eq('0,1,NORTH') }
+    end
+
+    context 'longer & legitimate list' do
+      let(:instructions) do
+        [
+          'PLACE 4,4,NORTH',
+          'MOVE',
+          'MOVE',
+          'RIGHT',
+          'MOVE',
+          'MOVE',
+          'REPORT'
+        ]
+      end
+
+      it { expect(robot.report).to eq('5,5,EAST') }
+    end
+
+    context 'longer & legitimate list with several place & report statement' do
+      let(:instructions) do
+        [
+          'PLACE 4,4,NORTH',
+          'MOVE',
+          'MOVE',
+          'RIGHT',
+          'MOVE',
+          'MOVE',
+          'REPORT',
+          'PLACE 0,0,SOUTH',
+          'MOVE',
+          'REPORT'
+        ]
+      end
+
+      it { expect(robot.report).to eq('0,0,SOUTH') }
+    end
+
+    context 'when there is a mix of legitimate and illegitimate commands' do
+      let(:instructions) do
+        [
+          'PLACE 4,4,NORTH',
+          'MOVE',
+          'MOVE',
+          'RIGHT',
+          'MOVE',
+          'MOVE',
+          'RETORT',
+          'PLACE 0,0,MOUTH',
+          'MOUSE',
+          'REPORT'
+        ]
+      end
+
+      it { expect(robot.report).to eq('5,5,EAST') }
     end
   end
 end

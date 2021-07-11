@@ -17,9 +17,9 @@ class Robot
 
   def commander
     while @instructions.length > 0
-      instruction = @instructions.pop
+      instruction = @instructions.shift
       case instruction
-      when /PLACE/
+      when /PLACE \d,\d,(NORTH)|(SOUTH)|(EAST)|(WEST)/
         place(instruction)
       when 'MOVE'
         move
@@ -67,7 +67,7 @@ class Robot
   end
 
   def report
-    "#{x},#{y},#{direction}"
+    p "#{x},#{y},#{direction}"
   end
 
   DIRECTIONS = %w[NORTH EAST SOUTH WEST]
